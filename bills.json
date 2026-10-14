@@ -1,0 +1,22 @@
+[
+  {
+    "meter": "M1",
+    "units": 150,
+    "amount": 708.75
+  },
+  {
+    "meter": "M2",
+    "units": 420,
+    "amount": 2661.75
+  },
+  {
+    "meter": "M3",
+    "units": 0,
+    "amount": 78.75
+  },
+  {
+    "meter": "M4",
+    "units": 50,
+    "amount": 288.75
+  }
+]
