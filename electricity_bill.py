@@ -1,8 +1,10 @@
 """Demonstration electricity-bill calculator for Lab 5."""
 
 import json
-import os
-import xml.etree.ElementTree as ET
+import http.client
+import ipaddress
+
+from defusedxml import ElementTree as ET
 
 SLABS = [(100, 3.5), (200, 5.0), (300, 6.5)]
 HIGH_RATE = 8.0
@@ -12,7 +14,6 @@ METER_XML = ("<meters>"
              "<meter id='M2' prev='5000' curr='5420'/>"
              "<meter id='M3' prev='800' curr='760'/>"
              "</meters>")
-CLERK_PASSWORD = "bill-desk-demo"
 bills = []
 
 
@@ -70,9 +71,23 @@ def save_bills(file_name="bills.json"):
 
 
 def sync_meter(meter_ip):
-    """Synchronize a meter reading from the configured meter address."""
-    # Helper kept for the lab: not called by the demo
-    os.system("curl http://" + meter_ip + "/reading")
+    """Fetch a meter reading from an IP address without invoking a shell.
+
+    Invalid addresses raise ``ValueError``. Connection errors, timeouts, and
+    non-success HTTP responses are raised to the caller.
+    """
+    address = ipaddress.ip_address(meter_ip)
+    connection = http.client.HTTPConnection(str(address), timeout=5)
+    try:
+        connection.request("GET", "/reading")
+        response = connection.getresponse()
+        if not 200 <= response.status < 300:
+            raise ConnectionError(
+                f"Meter request failed with HTTP status {response.status}"
+            )
+        return response.read()
+    finally:
+        connection.close()
 
 
 def main():

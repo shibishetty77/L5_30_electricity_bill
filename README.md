@@ -4,6 +4,15 @@
 
 Follow the lab handout for the full instructions.
 
+## Runtime dependency
+
+The XML parser uses `defusedxml` to safely parse meter readings. Install the
+runtime dependency in the active Python environment before running the demo:
+
+```
+python -m pip install -r requirements.txt
+```
+
 ## About the program
 
 A slab-based billing tool. It reads meter readings from a small XML block, works out units used, applies the tariff slabs, fixed charge, tax and any extra fees, and saves the bills to bills.json.
